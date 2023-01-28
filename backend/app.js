@@ -19,13 +19,14 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const BadRequestError = require('./errors/BadRequestError');
 const NotFoundError = require('./errors/NotFoundError');
 
-const app = express();
-app.use(cookieParser());
-
 const {
   PORT = 3000, // cлушаем 3000 порт
   MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
 } = process.env;
+
+const app = express();
+app.use(cookieParser());
+
 app.use(cors());
 
 app.use(express.json({
