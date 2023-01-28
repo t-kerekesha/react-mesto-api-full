@@ -1,0 +1,11 @@
+.gallery {
+  grid-area: galery;
+  width: 100%;
+  margin-top: 51px;
+}
+
+@media (max-width: 800px) {
+  .gallery {
+    margin-top: 36px;
+  }
+}

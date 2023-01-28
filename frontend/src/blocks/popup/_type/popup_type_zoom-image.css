@@ -1,0 +1,10 @@
+.popup_type_zoom-image {
+  padding-top: 50px;
+  background-color: #000000e6;
+}
+
+@media (max-width: 800px) {
+  .popup_type_zoom-image {
+    padding-top: 100px;
+  }
+}

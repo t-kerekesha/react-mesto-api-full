@@ -1,0 +1,10 @@
+.popup_type_form {
+  padding-top: 155px;
+  background-color: #00000080;
+}
+
+@media (max-width: 800px) {
+  .popup_type_form {
+    padding-top: 87px;
+  }
+}

@@ -1,0 +1,8 @@
+.card__like-counter {
+  grid-area: like-counter;
+  margin: 0;
+  text-align: center;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.23;
+}

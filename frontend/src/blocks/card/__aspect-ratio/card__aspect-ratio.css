@@ -1,0 +1,13 @@
+.card__aspect-ratio {
+  grid-area: image;
+  display: flex;
+  position: relative;
+}
+
+.card__aspect-ratio::after {
+  content: '';
+  width: 0;
+  height: 0;
+  margin-left: -1px;
+  padding-top: 100%;
+}

@@ -1,0 +1,14 @@
+.card {
+  min-width: 282px;
+  min-height: 361px;
+  box-sizing: border-box;
+  margin: 0;
+  background-color: #fff;
+  color: #000;
+  border-radius: 10px;
+  display: grid;
+  grid-template-areas:
+  'image'
+  'caption';
+  grid-template-columns: 100%;
+}

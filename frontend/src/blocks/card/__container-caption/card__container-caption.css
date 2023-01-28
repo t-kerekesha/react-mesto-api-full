@@ -1,0 +1,13 @@
+.card__container-caption {
+  grid-area: caption;
+  padding: 20px 19px 20px 21px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-areas:
+  'name like-button'
+  'name like-counter';
+  grid-template-rows: min-content;
+  row-gap: 3px;
+  justify-content: space-between;
+  align-items: center;
+}

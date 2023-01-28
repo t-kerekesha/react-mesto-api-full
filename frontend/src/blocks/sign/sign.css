@@ -1,0 +1,17 @@
+.sign {
+  grid-area: content;
+  width: 100%;
+  padding-top: 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 15px;
+}
+
+@media (max-width: 800px) {
+  .sign {
+    padding: 40px 30px 77px;
+    row-gap: 20px;
+  }
+}

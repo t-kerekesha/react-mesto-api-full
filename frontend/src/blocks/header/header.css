@@ -1,0 +1,19 @@
+.header {
+  grid-area: header;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 41px;
+  border-bottom: 1px solid #545454b3;
+}
+
+@media (max-width: 800px) {
+  .header {
+    display: grid;
+    grid-template-areas:
+      'menu menu'
+      'logo button';
+    padding-bottom: 31.6px;
+  }
+}

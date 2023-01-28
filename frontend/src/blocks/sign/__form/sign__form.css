@@ -1,0 +1,13 @@
+.sign__form {
+  width: 358px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  --row-gap: calc(57px - 43px);
+}
+
+@media (max-width: 800px) {
+  .sign__form {
+    width: 100%;
+  }
+}
