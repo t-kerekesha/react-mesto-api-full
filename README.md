@@ -21,8 +21,9 @@
  * React
  * Express
 
-**Ссылка на проект**
+**Ссылка на проект и репозиторий**
 ------
+* [Ссылка на репозиторий](https://github.com/t-kerekesha/react-mesto-api-full)
 * [Ссылка на сайт](https://place.nomoredomainsclub.ru)
 * IP 51.250.16.235
 * Frontend  https://place.nomoredomainsclub.ru
