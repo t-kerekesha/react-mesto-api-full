@@ -24,6 +24,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthSuccessful, setAuthSuccessful] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [email, setEmail] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
@@ -41,10 +42,10 @@ function App() {
     setLoading(true);
     auth.register(userData.email, userData.password)
       .then((dataFromServer) => {
-        console.log(dataFromServer)
         if(dataFromServer._id) {
           setInfoTooltipOpen(true);
           setAuthSuccessful(true);
+          setEmail(dataFromServer.email);
         }
       })
       .catch((error) => {
@@ -63,7 +64,9 @@ function App() {
       .then((data) => {
         if(data._id) {
           localStorage.setItem('userId', data._id);
+          setEmail('');
           setLoggedIn(true);
+          // setCurrentUser(data);
         }
       })
       .catch((error) => {
@@ -88,17 +91,18 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  // проверка зарегистрирован ли пользователь
-  const userCheck = useCallback(() => {
+  // проверка регистрации пользователя
+  const loginCheck = useCallback(() => {
     userId = localStorage.getItem('userId');
     if(userId) {
       setLoading(true);
       auth.getCurrentUser()
         .then((user) => {
-          if (user) {
+  //         console.log(user)
+          // if (user) {
             setLoggedIn(true);
-            setCurrentUser(user);
-          }
+  //           setCurrentUser(user);
+          // }
         })
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
@@ -107,10 +111,13 @@ function App() {
 
   // Load UserInfo
   useEffect(() => {
+    // console.log(userId)
+    // console.log(loggedIn, 'loggedIn')
     if(loggedIn) {
       setLoading(true);
       api.getUserInfo()
         .then((dataFromServer) => {
+          console.log(dataFromServer)
           setCurrentUser(dataFromServer);
         })
         .catch((error) => console.log(error))
@@ -120,11 +127,13 @@ function App() {
 
   // LoadCard
   useEffect(() => {
+    console.log(loggedIn, 'loggedIncard')
     if(loggedIn) {
       setLoading(true);
       api.getInitialCards()
         .then((cardsFromServer) => {
           setCards(cardsFromServer);
+          // console.log(cardsFromServer)
         })
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
@@ -181,8 +190,8 @@ function App() {
 
   // лайк
   function handleCardLike(card) {
-    console.log(cards, 'cards')
-    console.log(card)
+    // console.log(cards, 'cards')
+    // console.log(card)
     // console.log(card.likes)
     // console.log(user._id, currentUser._id)
     const isLiked = card.likes.some((user) => {
@@ -198,7 +207,7 @@ function App() {
         });
         // console.log(newCards, 'newCards')
         setCards(newCards);
-        console.log(cards)
+        // console.log(cards)
       })
       .catch((error) => console.log(error));
   }
@@ -254,8 +263,8 @@ function App() {
   }
 
   useEffect(() => {
-    userCheck();
-  }, [userCheck, loggedIn]);
+    loginCheck();
+  }, [loginCheck, loggedIn]);
 
   if(isLoading) {
     return <Spinner/>
@@ -280,14 +289,14 @@ function App() {
           onAddPlace={handleAddPlaceClick}
           onCardClick={handleCardClick} />
         <Route path="/signin">
-          <Login isLoggedIn={loggedIn} onLogin={login} />
+          <Login isLoggedIn={loggedIn} onLogin={login} email={email} />
         </Route>
         <Route path="/signup">
           <Register isLoggedIn={loggedIn} onRegister={register} />
         </Route>
-        <Route path="/" exact>
-          {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-        </Route>
+        {/* <Route path="/" exact> */}
+          {/* {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />} */}
+        {/* </Route> */}
         <Route path="*">
           <PageNotFound />
         </Route>

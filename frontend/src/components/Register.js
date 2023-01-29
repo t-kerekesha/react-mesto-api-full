@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { validationParams } from '../utils/constants';
 import { validation } from '../utils/FormValidator';
 
-function Register({ isLoggedIn, onRegister}) {
+function Register({ isLoggedIn, onRegister }) {
   const [userData, setUserData] = useState({
     email: '',
     password: ''

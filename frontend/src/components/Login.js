@@ -3,9 +3,9 @@ import { Redirect } from 'react-router-dom';
 import { validationParams } from '../utils/constants';
 import { validation } from '../utils/FormValidator';
 
-function Login({ isLoggedIn, onLogin}) {
+function Login({ isLoggedIn, onLogin, email }) {
   const [userData, setUserData] = useState({
-    email: '',
+    email: email,
     password: ''
   });
   const formRef = useRef();
@@ -33,6 +33,7 @@ function Login({ isLoggedIn, onLogin}) {
   }
 
   if(isLoggedIn) {
+    console.log(isLoggedIn, 'isLoggedIn')
     return <Redirect to="/" />
   }
 
