@@ -37,7 +37,7 @@ export function getCurrentUser() {
 export function logout() {
   return fetch((BASE_URL + '/users/me'), {
     method: 'DELETE',
-    credentials: 'include'
+    credentials: 'include',
   })
   .then(checkResponse);
 }

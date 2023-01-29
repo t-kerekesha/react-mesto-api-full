@@ -59,9 +59,11 @@ function App() {
 
   //  аутентификация
   const login = useCallback((userData) => {
+    console.log(loggedIn, 'login')
     setLoading(true);
     auth.login(userData.email, userData.password)
       .then((data) => {
+        console.log(data)
         if(data._id) {
           localStorage.setItem('userId', data._id);
           setEmail('');
@@ -98,11 +100,7 @@ function App() {
       setLoading(true);
       auth.getCurrentUser()
         .then((user) => {
-  //         console.log(user)
-          // if (user) {
-            setLoggedIn(true);
-  //           setCurrentUser(user);
-          // }
+          setLoggedIn(true);
         })
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
@@ -115,7 +113,8 @@ function App() {
     // console.log(loggedIn, 'loggedIn')
     if(loggedIn) {
       setLoading(true);
-      api.getUserInfo()
+      // api.getUserInfo()
+      auth.getCurrentUser()
         .then((dataFromServer) => {
           console.log(dataFromServer)
           setCurrentUser(dataFromServer);

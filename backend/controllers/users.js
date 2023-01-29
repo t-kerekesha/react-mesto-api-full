@@ -60,7 +60,7 @@ module.exports.login = (request, response, next) => {
           const token = generateToken({ _id: user._id });
           response.status(STATUS_CODE_OK).cookie('jwt', token, {
             maxAge: 3600000 * 24 * 7,
-            sameSite: true,
+            // sameSite: true,
             httpOnly: true,
           })
             .send({

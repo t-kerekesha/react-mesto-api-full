@@ -79,7 +79,7 @@ class Api {
     const method = (like)? 'PUT' : 'DELETE';
     return fetch((this._baseUrl + '/cards/' + cardId + '/likes'), {
       method: method,
-      credentials: 'include'
+      credentials: 'include',
     })
     .then((response) => this._checkResponse(response));
   }
