@@ -293,9 +293,9 @@ function App() {
         <Route path="/signup">
           <Register isLoggedIn={loggedIn} onRegister={register} />
         </Route>
-        {/* <Route path="/" exact> */}
-          {/* {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />} */}
-        {/* </Route> */}
+        <Route path="/" exact>
+          {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+        </Route>
         <Route path="*">
           <PageNotFound />
         </Route>

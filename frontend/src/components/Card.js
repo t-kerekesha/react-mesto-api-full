@@ -50,6 +50,10 @@ class Card extends React.Component {
     this.setState({ isOpenTooltip: false });
   }
 
+  componentDidUpdate() {
+    this.card = this.props.card;
+  }
+
   render() {
     const isOwn = this.props.card.owner._id === this.context?._id;
     const cardDeleteButtonClassName = (
