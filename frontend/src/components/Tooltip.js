@@ -11,8 +11,8 @@ function Tooltip({ isOpen, likes, position: cursorPosition }) {
 
   useEffect(() => {
     setPosition({
-      top: cursorPosition.top,
-      left: cursorPosition.left,
+      top: cursorPosition?.top,
+      left: cursorPosition?.left,
       right: 'auto'
     });
     setCoordinates(tooltip.current.getBoundingClientRect());

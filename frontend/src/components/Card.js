@@ -1,121 +1,99 @@
-import React from 'react';
+import { useState, useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Tooltip from './Tooltip';
 
-class Card extends React.Component {
-  static contextType = CurrentUserContext;
-  constructor(props) {
-    super(props);
-    this.card = this.props.card;
-    this.onCardLike = this.props.onCardLike;
-    this.onCardDelete = this.props.onCardDelete;
-    this.onCardClick = this.props.onCardClick;
-    this.handleCardClick = this.handleCardClick.bind(this);
-    this.handleLikeClick = this.handleLikeClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
-    this.openTooltip = this.openTooltip.bind(this);
-    this.closeTooltip = this.closeTooltip.bind(this);
-    this.state = {
-      like: false,
-      isOpenTooltip: false,
-      likes: [],
-      positionTooltip: {}
-    };
+function Card({ card, onCardLike, onCardDelete, onCardClick }) {
+  const currentUser = useContext(CurrentUserContext);
+
+  const [isOpenTooltip, setOpenTooltip] = useState(false);
+  const [positionTooltip, setPositionTooltip] = useState(null);
+  const [likes, setLikes] = useState([]);
+
+  function handleCardClick() {
+    onCardClick(card);
   }
 
-  handleCardClick() {
-    this.props.onCardClick(this.card);
+  function handleLikeClick() {
+    onCardLike(card);
   }
 
-  handleLikeClick() {
-    this.props.onCardLike(this.card);
+  function handleDeleteClick() {
+    onCardDelete(card);
   }
 
-  handleDeleteClick() {
-    this.props.onCardDelete(this.card);
-  }
-
-  openTooltip({ likes, top, left }) {
-    this.setState({
-      isOpenTooltip: true,
-      likes: likes,
-      positionTooltip: {
-        top: top,
-        left: left
-      }
+  function openTooltip({ likes, top, left }) {
+    setOpenTooltip(true);
+    setLikes(likes);
+    setPositionTooltip({
+      top: top,
+      left: left
     });
   }
 
-  closeTooltip() {
-    this.setState({ isOpenTooltip: false });
+  function closeTooltip() {
+    setOpenTooltip(false);
   }
 
-  componentDidUpdate() {
-    this.card = this.props.card;
-  }
+  const isOwn = card.owner._id === currentUser?._id;
+  const cardDeleteButtonClassName = (
+    `card__delete-button  button ${isOwn && 'card__delete-button_visible'}`
+  );
 
-  render() {
-    const isOwn = this.props.card.owner._id === this.context?._id;
-    const cardDeleteButtonClassName = (
-      `card__delete-button  button ${isOwn && 'card__delete-button_visible'}`
-    );
+  const isLiked = card.likes.some((user) => {
+    return user._id === currentUser?._id;
+  });
+  const cardLikeButtonClassName = (
+    `card__like-button ${isLiked && "card__like-button_active"}`
+  );
 
-    const isLiked = this.props.card.likes.some((user) => {
-      return user._id === this.context?._id;
-    });
-    const cardLikeButtonClassName = (
-      `card__like-button ${isLiked && "card__like-button_active"}`
-    );
-
-    return (
-      <>
-        <li className="gallery__list-item">
-          <figure className="card">
-            <div className="card__aspect-ratio">
-              <img src={this.props.card.link}
-                className="card__image"
-                alt={this.props.card.name}
-                onClick={this.handleCardClick}
-              />
-            </div>
-            <button className={cardDeleteButtonClassName}
+  return (
+    <>
+      <li className="gallery__list-item">
+        <figure className="card">
+          <div className="card__aspect-ratio">
+            <img src={card.link}
+              className="card__image"
+              alt={card.name}
+              onClick={handleCardClick}
+            />
+          </div>
+          <button className={cardDeleteButtonClassName}
+            type="button"
+            aria-label="Удалить"
+            onClick={handleDeleteClick}>
+          </button>
+          <figcaption className="card__container-caption">
+            <h2 className="card__caption">
+              {card.name}
+            </h2>
+            <button className={cardLikeButtonClassName}
               type="button"
-              aria-label="Удалить"
-              onClick={this.handleDeleteClick}>
+              aria-label="Лайк"
+              onClick={handleLikeClick}
+              onMouseEnter={(event) => {
+                if (card.likes.length > 0) {
+                  openTooltip({
+                    likes: card.likes,
+                    top: event.pageY,
+                    left: event.pageX
+                  })
+                }
+              }}
+              onMouseLeave={closeTooltip} >
             </button>
-            <figcaption className="card__container-caption">
-              <h2 className="card__caption">
-                {this.props.card.name}
-              </h2>
-              <button className={cardLikeButtonClassName}
-                type="button"
-                aria-label="Лайк"
-                onClick={this.handleLikeClick}
-                onMouseEnter={(event) => {
-                  if(this.props.card.likes.length > 0) {
-                    this.openTooltip({
-                      likes: this.props.card.likes,
-                      top: event.pageY,
-                      left: event.pageX
-                    })
-                  }
-                }}
-                onMouseLeave={this.closeTooltip} >
-              </button>
-              <p className="card__like-counter">
-                {this.props.card.likes.length}
-              </p>
-            </figcaption>
-          </figure>
-        </li>
+            <p className="card__like-counter">
+              {likes.length}
+            </p>
+          </figcaption>
+        </figure>
+      </li>
 
       <Tooltip
-        isOpen={this.state.isOpenTooltip}
-        likes={this.state.likes}
-        position={this.state.positionTooltip} />
+        isOpen={isOpenTooltip}
+        likes={likes}
+        position={positionTooltip} />
     </>
-    );
-  }
+  );
 }
 
 export default Card;

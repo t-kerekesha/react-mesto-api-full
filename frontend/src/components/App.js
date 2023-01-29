@@ -37,7 +37,7 @@ function App() {
 
   let userId = localStorage.getItem('userId');
 
-  // регистрация
+  // Pегистрация
   const register = useCallback((userData) => {
     setLoading(true);
     auth.register(userData.email, userData.password)
@@ -57,7 +57,7 @@ function App() {
       .finally(() => setLoading(false));
   });
 
-  //  аутентификация
+  //  Аутентификация
   const login = useCallback((userData) => {
     setLoading(true);
     auth.login(userData.email, userData.password)
@@ -78,7 +78,7 @@ function App() {
       .finally(() => setLoading(false));
   });
 
-  // выход из регистрации
+  // Выход из регистрации
   const logout = useCallback(() => {
     setLoading(true);
     auth.logout()
@@ -91,7 +91,7 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  // проверка регистрации пользователя
+  // Проверка регистрации пользователя
   const loginCheck = useCallback(() => {
     userId = localStorage.getItem('userId');
     if(userId) {
@@ -105,27 +105,15 @@ function App() {
     }
   }, []);
 
-  // Load UserInfo
+  // Загрузка данных пользователя и карточек
   useEffect(() => {
     if(loggedIn) {
       setLoading(true);
-      // api.getUserInfo()
-      auth.getCurrentUser()
+      api.getData()
         .then((dataFromServer) => {
-          setCurrentUser(dataFromServer);
-        })
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
-    }
-  }, [loggedIn]);
-
-  // LoadCard
-  useEffect(() => {
-    if(loggedIn) {
-      setLoading(true);
-      api.getInitialCards()
-        .then((cardsFromServer) => {
-          setCards(cardsFromServer);
+          const [ user, cards ] = dataFromServer;
+          setCurrentUser(user);
+          setCards(cards);
         })
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));

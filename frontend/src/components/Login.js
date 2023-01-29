@@ -33,7 +33,6 @@ function Login({ isLoggedIn, onLogin, email }) {
   }
 
   if(isLoggedIn) {
-    // console.log(isLoggedIn, 'isLoggedIn')
     return <Redirect to="/" />
   }
 
