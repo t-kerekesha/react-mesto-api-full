@@ -24,3 +24,6 @@
 **Ссылка на проект**
 ------
 * [Ссылка на сайт](https://place.nomoredomainsclub.ru)
+* IP 51.250.16.235
+* Frontend  https://place.nomoredomainsclub.ru
+* Backend  https://api.place.nomoredomainsclub.ru
