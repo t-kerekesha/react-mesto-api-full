@@ -41,7 +41,8 @@ function App() {
     setLoading(true);
     auth.register(userData.email, userData.password)
       .then((dataFromServer) => {
-        if(dataFromServer.data._id) {
+        console.log(dataFromServer)
+        if(dataFromServer._id) {
           setInfoTooltipOpen(true);
           setAuthSuccessful(true);
         }

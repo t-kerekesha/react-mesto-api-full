@@ -27,12 +27,11 @@ module.exports.createUser = (request, response, next) => {
       avatar,
     }))
     .then((user) => response.status(STATUS_CODE_CREATED).send({
-      data: {
-        email: user.email,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-      },
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
     }))
     .catch((error) => {
       if (error.name === 'ValidationError') {
