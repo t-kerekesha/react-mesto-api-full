@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/Api';
 import * as auth from '../utils/authorization';
-import { enableValidation, formValidators } from '../utils/FormValidator';
+import { formValidators } from '../utils/FormValidator';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -18,7 +18,7 @@ import ImagePopup from './ImagePopup';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
 import PageNotFound from './PageNotFound';
 import Spinner from './Spinner';
-import { validationParams } from '../utils/constants';
+// import { validationParams } from '../utils/constants';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -59,7 +59,6 @@ function App() {
 
   //  аутентификация
   const login = useCallback((userData) => {
-    console.log(loggedIn, 'login')
     setLoading(true);
     auth.login(userData.email, userData.password)
       .then((data) => {
@@ -68,7 +67,6 @@ function App() {
           localStorage.setItem('userId', data._id);
           setEmail('');
           setLoggedIn(true);
-          // setCurrentUser(data);
         }
       })
       .catch((error) => {
@@ -109,14 +107,11 @@ function App() {
 
   // Load UserInfo
   useEffect(() => {
-    // console.log(userId)
-    // console.log(loggedIn, 'loggedIn')
     if(loggedIn) {
       setLoading(true);
       // api.getUserInfo()
       auth.getCurrentUser()
         .then((dataFromServer) => {
-          console.log(dataFromServer)
           setCurrentUser(dataFromServer);
         })
         .catch((error) => console.log(error))
@@ -126,13 +121,11 @@ function App() {
 
   // LoadCard
   useEffect(() => {
-    console.log(loggedIn, 'loggedIncard')
     if(loggedIn) {
       setLoading(true);
       api.getInitialCards()
         .then((cardsFromServer) => {
           setCards(cardsFromServer);
-          // console.log(cardsFromServer)
         })
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
@@ -189,24 +182,15 @@ function App() {
 
   // лайк
   function handleCardLike(card) {
-    // console.log(cards, 'cards')
-    // console.log(card)
-    // console.log(card.likes)
-    // console.log(user._id, currentUser._id)
     const isLiked = card.likes.some((user) => {
       return user._id === currentUser._id;
     });
-    // console.log(isLiked)
     api.likeCard(card._id, !isLiked)
       .then((updatedCard) => {
-        // console.log(updatedCard)
-        // console.log(card._id, 'card._id')
         const newCards = cards.map((item) => {
           return item._id === card._id ? updatedCard : item;
         });
-        // console.log(newCards, 'newCards')
         setCards(newCards);
-        // console.log(cards)
       })
       .catch((error) => console.log(error));
   }

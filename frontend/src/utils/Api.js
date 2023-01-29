@@ -5,7 +5,7 @@ class Api {
     this._baseUrl = baseUrl;
   }
 
-  getAllInfo() {
+  getData() {
     return Promise.all([ this.getUserInfo(), this.getInitialCards() ]);
   }
 
