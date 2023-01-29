@@ -11,7 +11,7 @@ const {
 module.exports.getCards = (request, response, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
-    .then((cards) => response.status(STATUS_CODE_OK).send({ data: cards }))
+    .then((cards) => response.status(STATUS_CODE_OK).send(cards))
     .catch(next);
 };
 
@@ -24,7 +24,7 @@ module.exports.createCard = (request, response, next) => {
     owner: request.user._id,
   })
     .then((card) => Card.populate(card, { path: 'owner' }))
-    .then((card) => response.status(STATUS_CODE_CREATED).send({ data: card }))
+    .then((card) => response.status(STATUS_CODE_CREATED).send(card))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError(`Переданы некорректные данные при создании карточки: ${error.message}`));
@@ -65,7 +65,7 @@ function updateLike(request, response, next, { operator }) {
   )
     .populate(['owner', 'likes'])
     .orFail(new NotFoundError('Передан несуществующий id карточки'))
-    .then((card) => response.status(STATUS_CODE_OK).send({ data: card }))
+    .then((card) => response.status(STATUS_CODE_OK).send(card))
     .catch((error) => {
       if (error.name === 'CastError') {
         next(new BadRequestError(`Переданы некорректные данные для постановки или снятии лайка: ${error.message}`));
@@ -77,7 +77,7 @@ function updateLike(request, response, next, { operator }) {
 
 // Добавление лайка карточке
 module.exports.likeCard = (request, response, next) => {
-  updateLike(request, response, next, { operator: '$pull' }); // добавить id в массив лайков, если его там нет
+  updateLike(request, response, next, { operator: '$addToSet' }); // добавить id в массив лайков, если его там нет
 };
 
 // Удаление лайка у карточки

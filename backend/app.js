@@ -27,7 +27,11 @@ const {
 const app = express();
 app.use(cookieParser());
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3001', 'https://place.nomoredomainsclub.ru'],
+  credentials: true,
+  maxAge: 30,
+}));
 
 app.use(express.json({
   verify: (request, response, buffer) => {

@@ -24,8 +24,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isAuthSuccessful, setAuthSuccessful] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [user, setUser] = useState(null);
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -35,7 +34,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-  let jwt = localStorage.getItem('jwt');
+  let userId = localStorage.getItem('userId');
 
   // регистрация
   const register = useCallback((userData) => {
@@ -59,10 +58,10 @@ function App() {
   //  аутентификация
   const login = useCallback((userData) => {
     setLoading(true);
-    auth.authorize(userData.email, userData.password)
+    auth.login(userData.email, userData.password)
       .then((data) => {
-        if(data.token) {
-          localStorage.setItem('jwt', data.token);
+        if(data._id) {
+          localStorage.setItem('userId', data._id);
           setLoggedIn(true);
         }
       })
@@ -75,27 +74,32 @@ function App() {
       .finally(() => setLoading(false));
   });
 
+  // выход из регистрации
   const logout = useCallback(() => {
-    setLoggedIn(false);
-    localStorage.removeItem('jwt');
-    setUser(null);
+    setLoading(true);
+    auth.logout()
+      .then(() => {
+        setLoggedIn(false);
+        localStorage.removeItem('userId');
+        setCurrentUser(null);
+      })
+      .catch((error) => console.log(error.message))
+      .finally(() => setLoading(false));
   }, []);
 
-  // проверка токена
-  const tokenCheck = useCallback(() => {
-    jwt = localStorage.getItem('jwt');
-    if(jwt) {
+  // проверка зарегистрирован ли пользователь
+  const userCheck = useCallback(() => {
+    userId = localStorage.getItem('userId');
+    if(userId) {
       setLoading(true);
-      auth.checkToken(jwt)
+      auth.getCurrentUser()
         .then((user) => {
           if (user) {
             setLoggedIn(true);
-            setUser(user);
+            setCurrentUser(user);
           }
         })
-        .catch((error) => {
-          console.log(error);
-        })
+        .catch((error) => console.log(error))
         .finally(() => setLoading(false));
     }
   }, []);
@@ -108,9 +112,7 @@ function App() {
         .then((dataFromServer) => {
           setCurrentUser(dataFromServer);
         })
-        .catch((error) => {
-          console.log(error);
-        })
+        .catch((error) => console.log(error))
         .finally(() => setLoading(false));
     }
   }, [loggedIn]);
@@ -123,9 +125,7 @@ function App() {
         .then((cardsFromServer) => {
           setCards(cardsFromServer);
         })
-        .catch((error) => {
-          console.log(error);
-        })
+        .catch((error) => console.log(error))
         .finally(() => setLoading(false));
     }
   }, [loggedIn]);
@@ -150,9 +150,7 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((error) => {
-        console.log(error);
-      })
+      .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }
 
@@ -164,43 +162,44 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((error) => {
-        console.log(error);
-      })
+      .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }
 
   // добавление новой карточки
   function handleAddPlaceSubmit({ name, link }) {
-    console.log(name, link)
     setLoading(true);
     api.addNewCard({ name, link })
     .then((newCard) => {
       setCards([newCard, ...cards]);
       closeAllPopups();
     })
-    .catch((error) => {
-      console.log(error);
-    })
+    .catch((error) => console.log(error))
     .finally(() => setLoading(false));
   }
 
   // лайк
   function handleCardLike(card) {
+    console.log(cards, 'cards')
+    console.log(card)
+    // console.log(card.likes)
+    // console.log(user._id, currentUser._id)
     const isLiked = card.likes.some((user) => {
       return user._id === currentUser._id;
     });
-
+    // console.log(isLiked)
     api.likeCard(card._id, !isLiked)
       .then((updatedCard) => {
+        // console.log(updatedCard)
+        // console.log(card._id, 'card._id')
         const newCards = cards.map((item) => {
           return item._id === card._id ? updatedCard : item;
         });
+        // console.log(newCards, 'newCards')
         setCards(newCards);
+        console.log(cards)
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   }
 
   // удаление карточки
@@ -214,9 +213,7 @@ function App() {
         );
         closeAllPopups();
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.log(error));
   }
 
   function handleEditProfileClick() {
@@ -256,8 +253,8 @@ function App() {
   }
 
   useEffect(() => {
-    tokenCheck();
-  }, [tokenCheck, loggedIn]);
+    userCheck();
+  }, [userCheck, loggedIn]);
 
   if(isLoading) {
     return <Spinner/>
@@ -266,7 +263,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <Header
-        user={user}
+        user={currentUser}
         onLogout={logout} />
       <Switch>
         <ProtectedRoute

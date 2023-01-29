@@ -51,13 +51,13 @@ class Card extends React.Component {
   }
 
   render() {
-    const isOwn = this.props.card.owner._id === this.context._id;
+    const isOwn = this.props.card.owner._id === this.context?._id;
     const cardDeleteButtonClassName = (
       `card__delete-button  button ${isOwn && 'card__delete-button_visible'}`
     );
 
     const isLiked = this.props.card.likes.some((user) => {
-      return user._id === this.context._id;
+      return user._id === this.context?._id;
     });
     const cardLikeButtonClassName = (
       `card__like-button ${isLiked && "card__like-button_active"}`

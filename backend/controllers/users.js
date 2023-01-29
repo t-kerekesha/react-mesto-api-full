@@ -64,7 +64,12 @@ module.exports.login = (request, response, next) => {
             sameSite: true,
             httpOnly: true,
           })
-            .send({ message: 'Успешная регистрация' });
+            .send({
+              _id: user._id,
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+            });
         })
         .catch(next);
     })
@@ -74,7 +79,7 @@ module.exports.login = (request, response, next) => {
 // Возвращение всех пользователей
 module.exports.getUsers = (request, response, next) => {
   User.find({})
-    .then((users) => response.status(STATUS_CODE_OK).send({ data: users }))
+    .then((users) => response.status(STATUS_CODE_OK).send(users))
     .catch(next);
 };
 
@@ -97,14 +102,14 @@ async function findUser(id) {
 // Возвращение пользователя по _id
 module.exports.getUserById = (request, response, next) => {
   findUser(request.params.userId)
-    .then((user) => response.status(STATUS_CODE_OK).send({ data: user }))
+    .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch(next);
 };
 
 // Возвращение информации о текущем пользователе
 module.exports.getCurrentUser = (request, response, next) => {
   findUser(request.user._id)
-    .then((user) => response.status(STATUS_CODE_OK).send({ data: user }))
+    .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch(next);
 };
 
@@ -121,7 +126,7 @@ module.exports.updateUser = (request, response, next) => {
     },
   )
     .orFail(new NotFoundError('Пользователь с указанным id не найден'))
-    .then((user) => response.status(STATUS_CODE_OK).send({ data: user }))
+    .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError(`Переданы некорректные данные при обновлении профиля: ${error.message}`));
@@ -146,7 +151,7 @@ module.exports.updateAvatar = (request, response, next) => {
     },
   )
     .orFail(new NotFoundError('Пользователь с указанным id не найден'))
-    .then((user) => response.status(STATUS_CODE_OK).send({ data: user }))
+    .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequestError(`Переданы некорректные данные при обновлении аватара: ${error.message}`));
@@ -156,4 +161,13 @@ module.exports.updateAvatar = (request, response, next) => {
         next(error);
       }
     });
+};
+
+module.exports.logout = (request, response, next) => {
+  try {
+    response.status(STATUS_CODE_OK).clearCookie('jwt')
+      .send({ message: 'Успешный выход из учетной записи' });
+  } catch (error) {
+    next(error);
+  }
 };

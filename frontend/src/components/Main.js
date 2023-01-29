@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Card from './Card';
 
@@ -8,7 +8,7 @@ function Main({ cards, onCardLike, onCardDelete, onEditProfile, onEditAvatar, on
   return (
     <main className="content">
       <section className="profile">
-        <img src={currentUser.avatar}
+        <img src={currentUser?.avatar}
           alt="Аватар"
           className="profile__avatar"/>
         <div className="profile__avatar-overlay"
@@ -16,7 +16,7 @@ function Main({ cards, onCardLike, onCardDelete, onEditProfile, onEditAvatar, on
         </div>
         <div className="profile__info">
           <h1 className="profile__name">
-            {currentUser.name}
+            {currentUser?.name}
           </h1>
           <button className="profile__edit-button button"
             onClick={onEditProfile}
@@ -24,7 +24,7 @@ function Main({ cards, onCardLike, onCardDelete, onEditProfile, onEditAvatar, on
             aria-label="Редактировать">
           </button>
           <p className="profile__about">
-            {currentUser.about}
+            {currentUser?.about}
           </p>
         </div>
         <button className="profile__add-button button"

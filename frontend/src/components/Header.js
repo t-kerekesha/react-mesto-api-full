@@ -16,7 +16,7 @@ function Header({ user, onLogout }) {
         onClick={openMenu}
         aria-label="Открыть меню" />
       <div className={`header__menu ${isMenuOpen && "header__menu_visible"}`}>
-        <p className="header__user">{user?.data?.email}</p>
+        <p className="header__user">{user?.email}</p>
         <Switch>
           <Route path="/" exact>
             <Link to="/signin"

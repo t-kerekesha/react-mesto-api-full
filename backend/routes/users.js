@@ -7,6 +7,7 @@ const {
   getCurrentUser,
   updateUser,
   updateAvatar,
+  logout,
 } = require('../controllers/users');
 const {
   validateUserId,
@@ -19,5 +20,6 @@ usersRoutes.get('/me', getCurrentUser); // Возвращение информа
 usersRoutes.get('/:userId', validateUserId, getUserById); // Возвращение пользователя по _id
 usersRoutes.patch('/me', validateNameAbout, updateUser); // обновляет профиль
 usersRoutes.patch('/me/avatar', validateAvatar, updateAvatar); // обновляет аватар
+usersRoutes.delete('/me', logout);
 
 module.exports = usersRoutes;
