@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
@@ -34,7 +35,7 @@ module.exports.createUser = (request, response, next) => {
       avatar: user.avatar,
     }))
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(`Переданы некорректные данные при создании пользователя: ${error.message}`));
       } else if (error.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Пользователь с таким email уже существует'));
@@ -91,7 +92,7 @@ async function findUser(id) {
     }
     return user;
   } catch (error) {
-    if (error.name === 'CastError') {
+    if (error instanceof mongoose.Error.CastError) {
       throw new BadRequestError(`Некорректный id: ${error.message}`);
     }
     throw error;
@@ -127,9 +128,9 @@ module.exports.updateUser = (request, response, next) => {
     .orFail(new NotFoundError('Пользователь с указанным id не найден'))
     .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(`Переданы некорректные данные при обновлении профиля: ${error.message}`));
-      } else if (error.name === 'CastError') {
+      } else if (error instanceof mongoose.Error.CastError) {
         next(new BadRequestError(`Некорректный id: ${error.message}`));
       } else {
         next(error);
@@ -152,9 +153,9 @@ module.exports.updateAvatar = (request, response, next) => {
     .orFail(new NotFoundError('Пользователь с указанным id не найден'))
     .then((user) => response.status(STATUS_CODE_OK).send(user))
     .catch((error) => {
-      if (error.name === 'ValidationError') {
+      if (error instanceof mongoose.Error.ValidationError) {
         next(new BadRequestError(`Переданы некорректные данные при обновлении аватара: ${error.message}`));
-      } else if (error.name === 'CastError') {
+      } else if (error instanceof mongoose.Error.CastError) {
         next(new BadRequestError(`Некорректный id: ${error.message}`));
       } else {
         next(error);
@@ -162,11 +163,7 @@ module.exports.updateAvatar = (request, response, next) => {
     });
 };
 
-module.exports.logout = (request, response, next) => {
-  try {
-    response.status(STATUS_CODE_OK).clearCookie('jwt')
-      .send({ message: 'Успешный выход из учетной записи' });
-  } catch (error) {
-    next(error);
-  }
+module.exports.logout = (request, response) => {
+  response.status(STATUS_CODE_OK).clearCookie('jwt')
+    .send({ message: 'Успешный выход из учетной записи' });
 };

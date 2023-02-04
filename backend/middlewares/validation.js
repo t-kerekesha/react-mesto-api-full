@@ -39,21 +39,25 @@ const validateUserData = celebrate({
       .messages({
         'string.empty': 'Url-адрес не может быть пустым',
       }),
-  }).unknown(true),
+  }),
 });
 
 const validateNameAbout = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля - 2 символа',
-      'string.max': 'Максимальная длина поля - 30 символа',
-      'string.empty': 'Поле не может быть пустым',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Минимальная длина поля - 2 символа',
-      'string.max': 'Максимальная длина поля - 30 символа',
-      'string.empty': 'Поле не может быть пустым',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля - 2 символа',
+        'string.max': 'Максимальная длина поля - 30 символа',
+        'string.empty': 'Поле не может быть пустым',
+        'any.required': 'Необходимо указать имя пользователя',
+      }),
+    about: Joi.string().required().min(2).max(30)
+      .messages({
+        'string.min': 'Минимальная длина поля - 2 символа',
+        'string.max': 'Максимальная длина поля - 30 символа',
+        'string.empty': 'Поле не может быть пустым',
+        'any.required': 'Необходимо ввести описание',
+      }),
   }),
 });
 
@@ -105,14 +109,6 @@ const validateСardId = celebrate({
   }),
 });
 
-const validateCookies = celebrate({
-  cookies: Joi.object().keys({
-    jwt: Joi.string().required().messages({
-      'any.required': 'В запросе отсутствует токен, необходимо авторизоваться',
-    }),
-  }).unknown(true),
-});
-
 module.exports = {
   validateEmailPassword,
   validateUserData,
@@ -121,5 +117,4 @@ module.exports = {
   validateNameLink,
   validateUserId,
   validateСardId,
-  validateCookies,
 };

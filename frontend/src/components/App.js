@@ -51,8 +51,8 @@ function App() {
       .catch((error) => {
         setInfoTooltipOpen(true);
         setAuthSuccessful(false);
-        setErrorMessage(error.error);
-        console.log(error.error);
+        setErrorMessage(error.message);
+        console.log(error.message);
       })
       .finally(() => setLoading(false));
   });
@@ -62,11 +62,11 @@ function App() {
     setLoading(true);
     auth.login(userData.email, userData.password)
       .then((data) => {
-        console.log(data)
         if(data._id) {
           localStorage.setItem('userId', data._id);
           setEmail('');
           setLoggedIn(true);
+          setAuthSuccessful(false);
         }
       })
       .catch((error) => {
@@ -105,6 +105,10 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    loginCheck();
+  }, [loginCheck, loggedIn]);
+
   // Загрузка данных пользователя и карточек
   useEffect(() => {
     if(loggedIn) {
@@ -132,7 +136,7 @@ function App() {
   // }, [document])
   // console.log("forms", forms);
 
-  // обновление данных пользователя
+  // Обновление данных пользователя
   function handleUpdateUser({ name, about }) {
     setLoading(true);
     api.editUserInfo({ name, about })
@@ -144,7 +148,7 @@ function App() {
       .finally(() => setLoading(false));
   }
 
-  // обновление аватара
+  // Обновление аватара
   function handleUpdateAvatar({ avatar }) {
     setLoading(true);
     api.editUserAvatar(avatar)
@@ -156,7 +160,7 @@ function App() {
       .finally(() => setLoading(false));
   }
 
-  // добавление новой карточки
+  // Добавление новой карточки
   function handleAddPlaceSubmit({ name, link }) {
     setLoading(true);
     api.addNewCard({ name, link })
@@ -168,7 +172,7 @@ function App() {
     .finally(() => setLoading(false));
   }
 
-  // лайк
+  // Лайк
   function handleCardLike(card) {
     const isLiked = card.likes.some((user) => {
       return user._id === currentUser._id;
@@ -183,7 +187,7 @@ function App() {
       .catch((error) => console.log(error));
   }
 
-  // удаление карточки
+  // Удаление карточки
   function handleCardDelete(card) {
     api.deleteCard(card._id)
       .then(() => {
@@ -233,10 +237,6 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    loginCheck();
-  }, [loginCheck, loggedIn]);
-
   if(isLoading) {
     return <Spinner/>
   }
@@ -247,6 +247,7 @@ function App() {
         user={currentUser}
         onLogout={logout} />
       <Switch>
+
         <ProtectedRoute
           path="/"
           exact
@@ -264,6 +265,7 @@ function App() {
         </Route>
         <Route path="/signup">
           <Register isLoggedIn={loggedIn} onRegister={register} />
+          {isAuthSuccessful && <Redirect to='/signin' />}
         </Route>
         <Route path="/" exact>
           {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
@@ -273,8 +275,6 @@ function App() {
         </Route>
       </Switch>
       <Footer />
-
-      {isAuthSuccessful && <Redirect to='/signin' />}
 
       <InfoTooltip
         isOpen={isInfoTooltipOpen}

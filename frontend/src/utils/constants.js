@@ -1,8 +1,8 @@
 // Адрес сервера
-// export const BASE_URL = 'http://localhost:3000';
-export const BASE_URL = 'https://api.place.nomoredomainsclub.ru';
+export const BASE_URL = 'http://localhost:3000';
+// export const BASE_URL = 'https://api.place.nomoredomainsclub.ru';
 
-// параметры для валидации
+// Параметры для валидации
 export const validationParams = {
   inputClass: 'input',
   inputSelector: '.input',

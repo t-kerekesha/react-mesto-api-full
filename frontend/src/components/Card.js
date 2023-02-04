@@ -7,7 +7,6 @@ function Card({ card, onCardLike, onCardDelete, onCardClick }) {
 
   const [isOpenTooltip, setOpenTooltip] = useState(false);
   const [positionTooltip, setPositionTooltip] = useState(null);
-  const [likes, setLikes] = useState([]);
 
   function handleCardClick() {
     onCardClick(card);
@@ -23,7 +22,6 @@ function Card({ card, onCardLike, onCardDelete, onCardClick }) {
 
   function openTooltip({ likes, top, left }) {
     setOpenTooltip(true);
-    setLikes(likes);
     setPositionTooltip({
       top: top,
       left: left
@@ -73,7 +71,6 @@ function Card({ card, onCardLike, onCardDelete, onCardClick }) {
               onMouseEnter={(event) => {
                 if (card.likes.length > 0) {
                   openTooltip({
-                    likes: card.likes,
                     top: event.pageY,
                     left: event.pageX
                   })
@@ -82,7 +79,7 @@ function Card({ card, onCardLike, onCardDelete, onCardClick }) {
               onMouseLeave={closeTooltip} >
             </button>
             <p className="card__like-counter">
-              {likes.length}
+              {card.likes.length}
             </p>
           </figcaption>
         </figure>
@@ -90,7 +87,7 @@ function Card({ card, onCardLike, onCardDelete, onCardClick }) {
 
       <Tooltip
         isOpen={isOpenTooltip}
-        likes={likes}
+        likes={card.likes}
         position={positionTooltip} />
     </>
   );

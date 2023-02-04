@@ -37,6 +37,8 @@ function Login({ isLoggedIn, onLogin, email }) {
   }
 
   return (
+    <>
+    {isLoggedIn && <Redirect to="/" />}
     <main className="sign">
       <form className="sign__form"
         onSubmit={handleSubmit}
@@ -75,6 +77,7 @@ function Login({ isLoggedIn, onLogin, email }) {
         </button>
       </form>
     </main>
+    </>
   );
 }
 

@@ -24,6 +24,7 @@ module.exports.auth = (request, response, next) => {
     } else {
       next(error);
     }
+    return;
   }
 
   request.user = payload;

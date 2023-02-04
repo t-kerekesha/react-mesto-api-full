@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const { errors } = require('celebrate');
+// const { errors } = require('celebrate');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
@@ -12,7 +12,6 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const {
   validateEmailPassword,
   validateUserData,
-  validateCookies,
 } = require('./middlewares/validation');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -53,16 +52,16 @@ app.get('/crash-test', () => {
 
 app.post('/signin', validateEmailPassword, login);
 app.post('/signup', validateUserData, createUser);
-app.use('/users', auth, validateCookies, usersRoutes);
-app.use('/cards', auth, validateCookies, cardsRoutes);
+app.use('/users', auth, usersRoutes);
+app.use('/cards', auth, cardsRoutes);
 
 app.use('*', auth, (request, response, next) => next(new NotFoundError('Неверный путь')));
 
 app.use(errorLogger); // логгер ошибок
 
 // Обработка ошибок
-app.use(errors()); // обработчик ошибок celebrate
-app.use(errorHandler); // централизованный обработчик ошибок
+// app.use(errors()); // обработчик ошибок celebrate
+app.use(errorHandler); // централизованный обработчик ошибок и ошибок celebrate
 
 async function connect() {
   await mongoose.connect(MONGO_URL); // подключение к серверу mongo
