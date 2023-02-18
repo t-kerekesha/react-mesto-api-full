@@ -19,7 +19,7 @@ const BadRequestError = require('./errors/BadRequestError');
 const NotFoundError = require('./errors/NotFoundError');
 
 const {
-  PORT = 3000, // cлушаем 3000 порт
+  PORT = 3005, // cлушаем 3000 порт
   MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
 } = process.env;
 
